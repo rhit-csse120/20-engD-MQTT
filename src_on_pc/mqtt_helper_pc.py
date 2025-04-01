@@ -11,8 +11,8 @@ PC_TO_DEVICE_TOPIC = UNIQUE_ID + "/pc_to_device"
 DEVICE_TO_PC_TOPIC = UNIQUE_ID + "/device_to_pc"
 
 # TODO: Un-comment if you want to communicate from PC Run 2 to PC Run 1
-PC_TO_DEVICE_TOPIC = UNIQUE_ID + "/device_to_pc"
-DEVICE_TO_PC_TOPIC = UNIQUE_ID + "/pc_to_device"
+# PC_TO_DEVICE_TOPIC = UNIQUE_ID + "/device_to_pc"
+# DEVICE_TO_PC_TOPIC = UNIQUE_ID + "/pc_to_device"
 
 BROKER = "broker.emqx.io"  # Or: "broker.hivemq.com", but must match Pico
 TCP_PORT = 1883
