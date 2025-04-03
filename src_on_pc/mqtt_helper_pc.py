@@ -8,8 +8,12 @@ Author:  David Mutchler, Rose-Hulman Institute of Technology,
 
 import paho.mqtt.client
 
-UNIQUE_ID = "DavidMutchler1019"  # TODO: Use something no one else will use
+# -----------------------------------------------------------------------------
+# Global constants for the MQTT communication.
+# Also global variable ROOT: a hook to your GUI's root Tk object.
+# -----------------------------------------------------------------------------
 
+UNIQUE_ID = "DavidMutchler1019"  # TODO: Use something no one else will use
 PC_TO_DEVICE_TOPIC = UNIQUE_ID + "/pc_to_device"
 DEVICE_TO_PC_TOPIC = UNIQUE_ID + "/device_to_pc"
 
@@ -20,10 +24,18 @@ DEVICE_TO_PC_TOPIC = UNIQUE_ID + "/device_to_pc"
 BROKER = "broker.emqx.io"  # Or: "broker.hivemq.com", but must match Pico
 TCP_PORT = 1883
 
+ROOT = None  # Set when the Mqtt client is constructed (below).
 
+
+# -----------------------------------------------------------------------------
+# Mqtt client that does the MQTT stuff
+# and also provides a hook to your GUI's root Tk object.
+# -----------------------------------------------------------------------------
 class MyMqttClient(paho.mqtt.client.Client):
-    def __init__(self):
+    def __init__(self, root):
         super().__init__(paho.mqtt.client.CallbackAPIVersion.VERSION2)
+        global ROOT
+        ROOT = root
         self.on_connect = on_connect
         self.on_subscribe = on_subscribe
         self.on_message = on_message
@@ -39,6 +51,9 @@ class MyMqttClient(paho.mqtt.client.Client):
         self.subscribe(DEVICE_TO_PC_TOPIC)
 
 
+# -----------------------------------------------------------------------------
+# Define callback methods and assign them to the MQTT events
+# -----------------------------------------------------------------------------
 def on_connect(mqtt_client, userdata, flags, reason_code, properties):
     if reason_code == 0:
         print(f"CONNECTED to MQTT broker {BROKER}")
@@ -60,25 +75,14 @@ def on_message(mqtt_client, userdata, message_packet):
     message = message_packet.payload.decode()
     print("Received message:", message)  # Show on the Console
 
-    # -------------------------------------------------------------------------
-    # TODO: Modify as needed for your GUI
-    # -------------------------------------------------------------------------
-    mqtt_client.label_for_message_from_device["text"] = message  # Show in GUI
+    # noinspection PyUnresolvedReferences
+    ROOT.on_message(message, mqtt_client)  # Let the GUI do the work
 
 
 # -----------------------------------------------------------------------------
-# TODO: CALL (do NOT modify) as needed for your GUI
+# TODO: CALL (do NOT modify) as needed for your GUI.
 # -----------------------------------------------------------------------------
 def send_via_mqtt(message, mqtt_client):
     """Publish (send to other device) the given string."""
-    print("Sending", message)  # For debugging, as needed
+    print("Sending message:", message)  # For debugging, as needed
     mqtt_client.publish(PC_TO_DEVICE_TOPIC, message)
-
-
-# -----------------------------------------------------------------------------
-# TODO: Replace/augment as needed for your GUI
-# -----------------------------------------------------------------------------
-def send_contents_of_entry_box_via_mqtt(entry, mqtt_client):
-    """Publish (send to other device) the string in the given ttk.Entry."""
-    message = entry.get()
-    send_via_mqtt(message, mqtt_client)
