@@ -36,6 +36,7 @@ class MyMqttClient(paho.mqtt.client.Client):
         super().__init__(paho.mqtt.client.CallbackAPIVersion.VERSION2)
         global ROOT
         ROOT = root
+
         self.on_connect = on_connect
         self.on_subscribe = on_subscribe
         self.on_message = on_message

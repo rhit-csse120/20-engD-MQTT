@@ -8,7 +8,7 @@ Authors: David Mutchler and his colleagues
 
 import tkinter
 from tkinter import ttk
-import mqtt_helper_pc
+import mqtt_helper_pc  # NEED THIS!
 
 
 def main():
