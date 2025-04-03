@@ -1,6 +1,9 @@
 """
 Code for a PC to communicate with another device through MQTT.
 Use verbatim except where TODO's indicate.
+
+Author:  David Mutchler, Rose-Hulman Institute of Technology,
+         based on examples from the internet.
 """
 
 import paho.mqtt.client
